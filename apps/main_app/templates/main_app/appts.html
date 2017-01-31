@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load staticfiles %}
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}" media="screen" title="no title" charset="utf-8">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".button-collapse").sideNav();
+      $('select').material_select();
+      $('.prioritybutton').hover(function(){
+          $(this).css("background-color", "#4dd0e1");
+          }, function(){
+          $(this).css("background-color", "#00b8d4");
+      });
+    });
+  </script>
+  <title>timely</title>
+</head>
+<body>
+
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper cyan lighten-2">
+        <a href="#" class="brand-logo"><img class="navpics" src="{% static 'main_app/img/alarm-clock-white.png' %}" alt="Alarm Clock" style="margin-right: 5%;">timely</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li class="active"><a href="{% url 'appts:appts' %}">Home</a></li>
+          <li><a href="{% url 'appts:new' %}">Add New Task</a></li>
+          <li><a href="{% url 'appts:history' %}">Completed Tasks</a></li>
+          <li><a href="{% url 'appts:missed' %}">Missed Tasks</a></li>
+          <li><a href="{% url 'appts:account' %}">My Account</a></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Come Back Soon!"><a href="{% url 'appts:logout' %}">Log Out</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+         <li><a href="sass.html">Sass</a></li>
+         <li><a href="badges.html">Components</a></li>
+         <li><a href="collapsible.html">Javascript</a></li>
+         <li><a href="mobile.html">Mobile</a></li>
+       </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div id="home">
+    <h5 class="welcomeheader">Welcome, {{ request.session.username }}!</h5>
+    <h3 class="header">{{ today }}</h3>
+    <hr>
+    {% if my_appts|length == 0 %}
+    <h5>You have no tasks scheduled.</h5>
+    {% elif my_appts|length > 0 %}
+    <table class="striped">
+      <tr style="display: none;"></tr>
+      <tr class="tableheader">
+        <th>Task</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Type</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Complete</th>
+      </tr>
+      {% for appt in my_appts %}
+        <tr>
+          <td>{{ appt.my_task }}</td>
+          <td>{{ appt.my_date }}</td>
+          <td>{{ appt.my_time }}</td>
+          <td>{{ appt.my_location }}</td>
+          <td>{{ appt.my_type }}</td>
+          {% if appt.my_priority == 'High' %}
+          <td><button class="prioritybutton">{{ appt.my_priority }}</button></td>
+          {% else %}
+          <td>{{ appt.my_priority }}</td>
+          {% endif %}
+          <td>{{ appt.my_status }}</td>
+          <td>
+            <a href="{% url 'appts:edit' appt_id=appt.id %}" class="url tooltipped" data-position="right" data-delay="50" data-tooltip="Edit"><img src="{% static 'main_app/img/edit.png' %}" alt="Edit"></a>
+          </td>
+          <td>
+            <a href="{% url 'appts:delete' appt_id=appt.id %}" class="url tooltipped" data-position="right" data-delay="50" data-tooltip="Delete"><img src="{% static 'main_app/img/trash.png' %}" alt="Delete"></a>
+          </td>
+          <td>
+            <a href="{% url 'appts:complete' appt_id=appt.id %}" class="url tooltipped" data-position="right" data-delay="50" data-tooltip="Complete"><img src="{% static 'main_app/img/checked.png' %}" alt="Complete"></a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
+</body>
+</html>

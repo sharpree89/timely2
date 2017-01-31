@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load staticfiles %}
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}" media="screen" title="no title" charset="utf-8">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".button-collapse").sideNav();
+      $('select').material_select();
+      $('.newbutton').hover(function(){
+          $(this).css("background-color", "#4dd0e1");
+          }, function(){
+          $(this).css("background-color", "#00b8d4");
+      });
+    });
+  </script>
+  <title>timely</title>
+</head>
+<body>
+
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper cyan lighten-2">
+        <a href="#" class="brand-logo"><img class="navpics" src="{% static 'main_app/img/alarm-clock-white.png' %}" alt="Alarm Clock" style="margin-right: 5%;">timely</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="{% url 'appts:appts' %}">Home</a></li>
+          <li class="active"><a href="{% url 'appts:new' %}">Add New Task</a></li>
+          <li><a href="{% url 'appts:history' %}">Completed Tasks</a></li>
+          <li><a href="{% url 'appts:missed' %}">Missed Tasks</a></li>
+          <li><a href="{% url 'appts:account' %}">My Account</a></li>
+          <li><a href="{% url 'appts:logout' %}">Log Out</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+         <li><a href="sass.html">Sass</a></li>
+         <li><a href="badges.html">Components</a></li>
+         <li><a href="collapsible.html">Javascript</a></li>
+         <li><a href="mobile.html">Mobile</a></li>
+       </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="errors">
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.tags %}
+          <h5>{{ message }}</h5>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div id="newcontainer">
+    <form action="{% url 'appts:add' %}" method='post'>
+      <h3 class="newheader">Add A New Appointment</h3>
+      {% csrf_token %}
+      <div class="new">
+          <label for="task">Task</label>
+          <input type='text' name='task' placeholder="'Coffee Date With Cassidy'" autofocus>
+
+          <label for="date">Date</label>
+          <input type='date' name='date'>
+
+          <label for="time">Time</label>
+          <input type='time' name='time'>
+
+          <label for="location">Location</label>
+          <input type='text' name='location' placeholder="'Cafe Ladro'">
+      </div>
+      <div class="new">
+          <label for="type">Type</label>
+          <div class="input-field">
+            <select name='type'>
+              <option value="Appointment">Appointment</option>
+              <option value="Meeting">Meeting</option>
+              <option value="To Do">To Do</option>
+              <option value="Reminder">Reminder</option>
+              <option value="Social">Social</option>
+              <option value="Family">Family</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Vacation">Vacation</option>
+              <option value="Event">Event</option>
+              <option value="Work">Work</option>
+              <option value="School">School</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <label for="priority">Priority</label>
+          <div class="input-field">
+            <select name='priority'>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <label for="status">Status</label>
+          <div class="input-field">
+            <select name='status'>
+                <option value='Pending'>Pending</option>
+                <option value='Complete'>Complete</option>
+             </select>
+           </div>
+      </div>
+      <hr style="visibility: hidden;">
+      <input class="newbutton" type='submit' value='Add Appointment'>
+    </form>
+    <h5 style="font-weight: bold; margin-left: 20px;">{{ appt }} {{ success }}</h5>
+  </div>
+
+</body>
+</html>

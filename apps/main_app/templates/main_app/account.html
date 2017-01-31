@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load staticfiles %}
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}" media="screen" title="no title" charset="utf-8">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".button-collapse").sideNav();
+      $('select').material_select();
+      $('.button').hover(function(){
+          $(this).css("background-color", "#4dd0e1");
+          }, function(){
+          $(this).css("background-color", "#00b8d4");
+      });
+    });
+  </script>
+  <title>timely</title>
+</head>
+<body>
+
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper cyan lighten-2">
+        <a href="#" class="brand-logo"><img class="navpics" src="{% static 'main_app/img/alarm-clock-white.png' %}" alt="Alarm Clock" style="margin-right: 5%;">timely</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="{% url 'appts:appts' %}">Home</a></li>
+          <li><a href="{% url 'appts:new' %}">Add New Task</a></li>
+          <li><a href="{% url 'appts:history' %}">Completed Tasks</a></li>
+          <li><a href="{% url 'appts:missed' %}">Missed Tasks</a></li>
+          <li class="active"><a href="{% url 'appts:account' %}">My Account</a></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Come Back Soon!"><a href="{% url 'appts:logout' %}">Log Out</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+         <li><a href="sass.html">Sass</a></li>
+         <li><a href="badges.html">Components</a></li>
+         <li><a href="collapsible.html">Javascript</a></li>
+         <li><a href="mobile.html">Mobile</a></li>
+       </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="errors">
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.tags %}
+          <h5>{{ message }}</h5>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div id="account">
+    <div class="accountheader">
+      <h3>Update Account</h3>
+      <p class="p">Changes will take effect the next time you log in.</p>
+    </div>
+
+    <form action="{% url 'appts:change_username' user_id=user.id %}" method='post' class="form">
+      {% csrf_token %}
+      <label for="username">Username</label>
+      <input type='text' name='username' value='{{ user.username }}'>
+
+      <input class="button" type='submit' value='Update Username'>
+      <input type='hidden' name='user_id' value='{{ user.id }}'>
+    </form>
+
+    <form action="{% url 'appts:change_email' user_id=user.id %}" method='post' class="form">
+      {% csrf_token %}
+      <label for="email">Email</label>
+      <input type='text' name='email' value='{{ user.email }}'>
+
+      <input class="button" type='submit' value='Update Email'>
+      <input type='hidden' name='user_id' value='{{ user.id }}'>
+    </form>
+
+    <div class="accountheader"></div>
+
+    <form action="{% url 'appts:change_password' user_id=user.id %}" method='post' class="form">
+      {% csrf_token %}
+
+      <label for="password">Password</label>
+      <input type='password' name='password'>
+
+      <label for="confirm_password">Confirm Password</label>
+      <input type='password' name='confirm_password'>
+
+      <input class="button" type='submit' value='Update Password'>
+      <input type='hidden' name='user_id' value='{{ user.id }}'>
+    </form>
+
+    <form action="{% url 'appts:delete_account' user_id=user.id %}" method='post' class="form">
+      {% csrf_token %}
+      <label for="deleteaccount">Delete Account</label>
+      <p class="p">By clicking this button, you agree to delete your timely account and all tasks associated with your account.</p>
+      <p class="p" style="padding-bottom: 1%;">This is a permanent action that cannot be undone. Are you sure you want to go?</p>
+      <input class="button" type='submit' value='Yes, Delete My Account' name="deleteaccount">
+      <input type='hidden' name='user_id' value='{{ user.id }}'>
+    </form>
+  </div>
+
+</body>
+</html>
